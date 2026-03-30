@@ -1,8 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from rest_framework import viewsets,status
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework.response import Response
+
+
+def book_list(request):
+    books = Book.objects.all()
+    return render(request,'book_list.html',{'books':books})
+
+def add_book(request):
+    if request.method=='POST':
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        Book.objects.create(title=title,author=author)
+        return redirect('book_list')
+    return render(request,'add_book.html')
 
 # Create your views here.
 class BookViewSet(viewsets.ViewSet):
